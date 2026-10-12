@@ -1,0 +1,64 @@
+
+##################################################
+# IQ-OTH_NCCD
+##################################################
+Loaded 822 train / 275 test in 8.9s
+
+--- RF ---
+Trained in 1.6s | train acc 1.0000 | test acc 0.9818 | macro F1 0.9672
+              precision    recall  f1-score   support
+
+      benign       1.00      0.87      0.93        30
+   malignant       1.00      0.99      1.00       141
+      normal       0.95      1.00      0.98       104
+
+    accuracy                           0.98       275
+   macro avg       0.98      0.95      0.97       275
+weighted avg       0.98      0.98      0.98       275
+
+Confusion matrix (rows=true, cols=pred): [np.str_('benign'), np.str_('malignant'), np.str_('normal')]
+[[ 26   0   4]
+ [  0 140   1]
+ [  0   0 104]]
+
+--- GB ---
+Trained in 870.6s | train acc 1.0000 | test acc 0.9855 | macro F1 0.9707
+              precision    recall  f1-score   support
+
+      benign       0.96      0.90      0.93        30
+   malignant       1.00      1.00      1.00       141
+      normal       0.97      0.99      0.98       104
+
+    accuracy                           0.99       275
+   macro avg       0.98      0.96      0.97       275
+weighted avg       0.99      0.99      0.99       275
+
+Confusion matrix (rows=true, cols=pred): [np.str_('benign'), np.str_('malignant'), np.str_('normal')]
+[[ 27   0   3]
+ [  0 141   0]
+ [  1   0 103]]
+
+--- KNN ---
+Trained in 0.1s | train acc 1.0000 | test acc 0.9600 | macro F1 0.9284
+              precision    recall  f1-score   support
+
+      benign       1.00      0.73      0.85        30
+   malignant       1.00      0.98      0.99       141
+      normal       0.90      1.00      0.95       104
+
+    accuracy                           0.96       275
+   macro avg       0.97      0.90      0.93       275
+weighted avg       0.96      0.96      0.96       275
+
+Confusion matrix (rows=true, cols=pred): [np.str_('benign'), np.str_('malignant'), np.str_('normal')]
+[[ 22   0   8]
+ [  0 138   3]
+ [  0   0 104]]
+
+========================================================================
+SUMMARY
+Dataset        Model    Train time   Train acc    Test acc    Macro F1
+IQ-OTH_NCCD    RF             1.6s      1.0000      0.9818      0.9672
+IQ-OTH_NCCD    GB           870.6s      1.0000      0.9855      0.9707
+IQ-OTH_NCCD    KNN            0.1s      1.0000      0.9600      0.9284
+========================================================================

@@ -1,7 +1,9 @@
 """
 One-time setup: pool Data/train + Data/valid + Data/test into a single set
 of images, then write ONE fresh random stratified 75/25 split to disk as
-Task1/DataSplit/train/<class>/... and Task1/DataSplit/test/<class>/....
+Datasets/Chest_CT/DataSplit/train/<class>/... and Datasets/Chest_CT/DataSplit/test/<class>/....
+Byte-identical duplicate images are removed first (Datasets/create_splits.py
+drop_duplicates), so no image is in both train and test.
 
 This replaces the dataset's original train/valid/test folders (which come
 from different scan batches and don't represent each other well -- see the
@@ -13,13 +15,18 @@ Usage:
 """
 
 import shutil
+import sys
 from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-OLD_DATA_DIR = BASE_DIR / "Data"
-SPLIT_DIR = BASE_DIR / "DataSplit"
+DATASETS_DIR = BASE_DIR.parent / "Datasets"
+DATASET_DIR = DATASETS_DIR / "Chest_CT"
+sys.path.insert(0, str(DATASETS_DIR))
+from create_splits import drop_duplicates
+OLD_DATA_DIR = DATASET_DIR / "Data"
+SPLIT_DIR = DATASET_DIR / "DataSplit"
 
 TEST_SIZE = 0.25
 RANDOM_STATE = 42
@@ -61,6 +68,7 @@ def main():
     print("Collecting images from Data/train, Data/valid, Data/test...")
     items = collect_all_images()
     print(f"  {len(items)} images total")
+    items = drop_duplicates(items)
 
     labels = [label for _, label, _ in items]
     print("Class distribution (pooled):")

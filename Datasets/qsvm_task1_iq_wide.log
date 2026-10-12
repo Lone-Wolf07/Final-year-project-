@@ -1,0 +1,119 @@
+Device: cpu | qubits searched: [4, 6, 8, 10, 12, 14, 16]
+Simulator matches Qiskit zz_feature_map statevectors.
+
+##################################################
+# Task1
+##################################################
+Loaded 750 train / 250 test in 7.6s
+
+CV search: 5-fold on 750 training images (224 quantum kernels x 5 C values per fold)
+  fold 1/5 done in 152.5s
+  fold 2/5 done in 161.0s
+  fold 3/5 done in 137.3s
+  fold 4/5 done in 131.3s
+  fold 5/5 done in 144.8s
+Search took 726.9s
+Best QSVM: qubits=16 reps=1 entanglement=full bandwidth=0.02 C=100 | CV acc 0.8187 | CV macro F1 0.8273
+Best RBF baseline: PCA dims=16 gamma=0.1 C=10 | CV acc 0.8253 | CV macro F1 0.8337
+
+Final fit on 750 training images
+QSVM trained in 2.1s (443 support vectors)
+
+--- QSVM (16 qubits) ---
+Test acc 0.8360 | macro F1 0.8443
+                         precision    recall  f1-score   support
+
+         adenocarcinoma       0.82      0.69      0.75        84
+   large.cell.carcinoma       0.73      0.85      0.78        47
+                 normal       1.00      1.00      1.00        54
+squamous.cell.carcinoma       0.81      0.88      0.84        65
+
+               accuracy                           0.84       250
+              macro avg       0.84      0.85      0.84       250
+           weighted avg       0.84      0.84      0.83       250
+
+Confusion matrix (rows=true, cols=pred): [np.str_('adenocarcinoma'), np.str_('large.cell.carcinoma'), np.str_('normal'), np.str_('squamous.cell.carcinoma')]
+[[58 13  0 13]
+ [ 7 40  0  0]
+ [ 0  0 54  0]
+ [ 6  2  0 57]]
+
+--- Classical RBF SVM on same 16 PCA features ---
+Test acc 0.8360 | macro F1 0.8424
+                         precision    recall  f1-score   support
+
+         adenocarcinoma       0.86      0.65      0.74        84
+   large.cell.carcinoma       0.70      0.85      0.77        47
+                 normal       1.00      1.00      1.00        54
+squamous.cell.carcinoma       0.80      0.92      0.86        65
+
+               accuracy                           0.84       250
+              macro avg       0.84      0.86      0.84       250
+           weighted avg       0.84      0.84      0.83       250
+
+Confusion matrix (rows=true, cols=pred): [np.str_('adenocarcinoma'), np.str_('large.cell.carcinoma'), np.str_('normal'), np.str_('squamous.cell.carcinoma')]
+[[55 15  0 14]
+ [ 6 40  0  1]
+ [ 0  0 54  0]
+ [ 3  2  0 60]]
+
+##################################################
+# IQ-OTH_NCCD
+##################################################
+Loaded 822 train / 275 test in 8.4s
+
+CV search: 5-fold on 822 training images (224 quantum kernels x 5 C values per fold)
+  fold 1/5 done in 155.2s
+  fold 2/5 done in 149.6s
+  fold 3/5 done in 177.9s
+  fold 4/5 done in 142.7s
+  fold 5/5 done in 143.2s
+Search took 768.7s
+Best QSVM: qubits=12 reps=1 entanglement=full bandwidth=0.05 C=100 | CV acc 0.9866 | CV macro F1 0.9735
+Best RBF baseline: PCA dims=14 gamma=0.1 C=10 | CV acc 0.9879 | CV macro F1 0.9763
+
+Final fit on 822 training images
+QSVM trained in 0.1s (309 support vectors)
+
+--- QSVM (12 qubits) ---
+Test acc 1.0000 | macro F1 1.0000
+              precision    recall  f1-score   support
+
+      benign       1.00      1.00      1.00        30
+   malignant       1.00      1.00      1.00       141
+      normal       1.00      1.00      1.00       104
+
+    accuracy                           1.00       275
+   macro avg       1.00      1.00      1.00       275
+weighted avg       1.00      1.00      1.00       275
+
+Confusion matrix (rows=true, cols=pred): [np.str_('benign'), np.str_('malignant'), np.str_('normal')]
+[[ 30   0   0]
+ [  0 141   0]
+ [  0   0 104]]
+
+--- Classical RBF SVM on same 14 PCA features ---
+Test acc 0.9891 | macro F1 0.9792
+              precision    recall  f1-score   support
+
+      benign       0.91      1.00      0.95        30
+   malignant       1.00      1.00      1.00       141
+      normal       1.00      0.97      0.99       104
+
+    accuracy                           0.99       275
+   macro avg       0.97      0.99      0.98       275
+weighted avg       0.99      0.99      0.99       275
+
+Confusion matrix (rows=true, cols=pred): [np.str_('benign'), np.str_('malignant'), np.str_('normal')]
+[[ 30   0   0]
+ [  0 141   0]
+ [  3   0 101]]
+
+================================================================================
+SUMMARY (test split)
+Dataset        Model                     CV acc  Test acc  Macro F1
+Task1          QSVM (16 qubits)          0.8187    0.8360    0.8443
+Task1          RBF SVM (16 PCA)          0.8253    0.8360    0.8424
+IQ-OTH_NCCD    QSVM (12 qubits)          0.9866    1.0000    1.0000
+IQ-OTH_NCCD    RBF SVM (14 PCA)          0.9879    0.9891    0.9792
+================================================================================

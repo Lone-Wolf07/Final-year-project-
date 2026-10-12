@@ -1,0 +1,24 @@
+
+##################################################
+# LC25000_Lung
+##################################################
+Loaded 11250 train / 3750 test in 119.8s
+
+--- RF ---
+Trained in 59.8s | train acc 1.0000 | test acc 0.8301 | macro F1 0.8253
+                         precision    recall  f1-score   support
+
+         adenocarcinoma       0.81      0.66      0.73      1250
+                 normal       0.85      0.95      0.90      1250
+squamous.cell.carcinoma       0.83      0.88      0.85      1250
+
+               accuracy                           0.83      3750
+              macro avg       0.83      0.83      0.83      3750
+           weighted avg       0.83      0.83      0.83      3750
+
+Confusion matrix (rows=true, cols=pred): [np.str_('adenocarcinoma'), np.str_('normal'), np.str_('squamous.cell.carcinoma')]
+[[ 823  199  228]
+ [  59 1191    0]
+ [ 137   14 1099]]
+
+--- GB ---

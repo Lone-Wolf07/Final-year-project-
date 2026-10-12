@@ -12,7 +12,7 @@ from sklearn.utils.class_weight import compute_sample_weight
 
 # --- Config -----------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "DataSplit"
+DATA_DIR = BASE_DIR.parent / "Datasets" / "Chest_CT" / "DataSplit"
 MODEL_DIR = BASE_DIR / "Models"
 MODEL_PATH = MODEL_DIR / "gb_lung_classifier.joblib"
 

@@ -11,7 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 
 # --- Config -----------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "DataSplit"
+DATA_DIR = BASE_DIR.parent / "Datasets" / "Chest_CT" / "DataSplit"
 MODEL_DIR = BASE_DIR / "Models"
 MODEL_PATH = MODEL_DIR / "rf_lung_classifier.joblib"
 
