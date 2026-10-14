@@ -1,23 +1,3 @@
-"""
-Compare every lung-segmentation method against the one shared reference (the
-lungmask U-Net masks, Datasets/<dataset>/ReferenceMasks) on the same images.
-
-Reads each method's Results/<dataset>/summary.csv, which already holds per-image
-scores and raw tp/fp/fn/tn counts against the reference (see
-Traditional_Methods/common.py score()), and reports per method, dataset and
-split:
-  Dice  mean / median / std over images, images with Dice < 0.8
-  IoU, pixel accuracy, precision, recall   pooled over every pixel of the split
-  empty masks where the reference has lung, mean seconds per image
-
-Writes segmentation_results.csv next to this script and prints the test-split
-tables. The test split is the fair comparison: the ML methods trained on the
-train split's reference masks, the traditional methods never saw them.
-
-Usage:
-    python compare_methods.py
-"""
-
 import csv
 from pathlib import Path
 
@@ -30,11 +10,10 @@ METHODS = {
     "Region growing": ROOT / "Traditional_Methods" / "Region_Growing" / "Results",
     "Region growing (improved)": ROOT / "Traditional_Methods" / "Region_Growing" / "Results_Improved",
     "SVM": ROOT / "ML_Methods" / "SVM" / "Results",
-    "Logistic regression": ROOT / "ML_Methods" / "LR" / "Results",
     "Random forest": ROOT / "ML_Methods" / "RF" / "Results",
-    "KNN": ROOT / "ML_Methods" / "KNN" / "Results",
 }
-DATASETS = ["Chest_CT", "IQ-OTH_NCCD"]
+DATASETS = ["COVID19_CT_Seg"]
+ML_METHODS = {"SVM", "Random forest"}
 OUT_CSV = Path(__file__).resolve().parent / "segmentation_results.csv"
 
 
@@ -62,7 +41,7 @@ def main():
                 print(f"missing: {path}")
                 continue
             rows = list(csv.DictReader(open(path)))
-            for split in ("test", "train"):
+            for split in ("test", "val", "train"):
                 part = [r for r in rows if r["split"] == split]
                 results.append(dict(method=method, dataset=dataset, split=split, **summarise(part)))
 
@@ -72,13 +51,26 @@ def main():
         writer.writerows(results)
 
     for dataset in DATASETS:
-        print(f"\n{dataset} -- test split, all methods vs. the lungmask reference")
+        print(f"\n{dataset} -- test split, all methods vs. the hand-drawn reference")
         print(f"{'Method':<27}{'Dice mean':>10}{'median':>8}{'std':>7}{'<0.8':>6}{'IoU':>8}{'PixAcc':>8}"
               f"{'Prec':>8}{'Recall':>8}{'Empty':>7}{'s/img':>8}")
         for r in (r for r in results if r["dataset"] == dataset and r["split"] == "test"):
             print(f"{r['method']:<27}{r['dice_mean']:>10.4f}{r['dice_median']:>8.4f}{r['dice_std']:>7.3f}"
                   f"{r['dice_below_0_8']:>6}{r['iou']:>8.4f}{r['pixel_accuracy']:>8.4f}{r['precision']:>8.4f}"
                   f"{r['recall']:>8.4f}{r['empty_masks']:>7}{r['seconds_per_image']:>8.3f}")
+
+        test = sorted((r for r in results if r["dataset"] == dataset and r["split"] == "test"),
+                      key=lambda r: r["dice_mean"], reverse=True)
+        print(f"\n{dataset} -- ranking by test mean Dice")
+        for rank, r in enumerate(test, 1):
+            kind = "ML" if r["method"] in ML_METHODS else "traditional"
+            print(f"  {rank}. {r['method']:<27}{kind:<13}Dice {r['dice_mean']:.4f}  IoU {r['iou']:.4f}")
+        best_trad = next((r for r in test if r["method"] not in ML_METHODS), None)
+        best_ml = next((r for r in test if r["method"] in ML_METHODS), None)
+        if best_trad and best_ml:
+            print(f"Best traditional: {best_trad['method']} (Dice {best_trad['dice_mean']:.4f}) | "
+                  f"best ML: {best_ml['method']} (Dice {best_ml['dice_mean']:.4f}) | "
+                  f"ML - traditional: {best_ml['dice_mean'] - best_trad['dice_mean']:+.4f}")
     print(f"\nWrote {OUT_CSV}")
 
 

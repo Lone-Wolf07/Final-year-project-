@@ -1,27 +1,3 @@
-"""
-Reference lung masks for the CT datasets, made with lungmask -- the published
-U-Net of Hofmanninger et al. (Eur Radiol Exp 2020), model R231, trained on
-hand-labelled CT scans covering a wide range of lung diseases. There are no
-hand-traced masks for these datasets, so this independent model is the one
-reference every segmentation method (traditional and ML) is scored against,
-and the ML methods learn from its train-split masks.
-
-lungmask expects Hounsfield units, but these images are already-windowed 8-bit
-PNG/JPGs. Each image is mapped back to an approximate HU scale from its own
-levels: the darkest 1% (outside air) -> -1000 HU and the median of the
-bright, above-isodata pixels (soft tissue) -> +40 HU. This works whatever
-display window the image was saved with: under a lung window the lungs land
-around -700 HU, under a soft-tissue window they are already black (-1000).
-
-Outputs, per dataset:
-  <dataset>/ReferenceMasks/<split>/<class>/<name>.png   binary mask (0/255)
-  <dataset>/reference_overlays.png                     random sample, outlined
-
-Usage:
-    python create_reference_masks.py                 # both CT datasets
-    python create_reference_masks.py IQ-OTH_NCCD     # one dataset
-"""
-
 import logging
 import random
 import sys
@@ -54,7 +30,6 @@ def load_gray(path):
 
 
 def to_hu(img):
-    """Approximate Hounsfield units from a windowed image's own air and tissue levels."""
     air = np.percentile(img, 1)
     bright = img[img > threshold_isodata(img)]
     tissue = np.median(bright) if bright.size else img.max()
@@ -74,7 +49,7 @@ def run_dataset(name, inferer):
     for i, path in enumerate(images):
         rel = path.relative_to(split_dir)
         img = load_gray(path)
-        mask = inferer.apply(to_hu(img)[None])[0] > 0  # labels: 1 = right lung, 2 = left lung
+        mask = inferer.apply(to_hu(img)[None])[0] > 0
         empty += not mask.any()
         mask_path = (out_dir / rel).with_suffix(".png")
         mask_path.parent.mkdir(parents=True, exist_ok=True)

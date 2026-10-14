@@ -13,3 +13,5 @@ desktop.ini
 # Trained models over GitHub's 100 MB limit (regenerate by retraining)
 Datasets/LC25000_Lung/Models/svm_lung_classifier.joblib
 Datasets/LC25000_Lung/Models/rf_lung_classifier.joblib
+# Raw COVID-19-CT-Seg download (~1.1 GB); regenerate with Datasets/create_covid_ct_seg.py
+Datasets/COVID19_CT_Seg/Raw/

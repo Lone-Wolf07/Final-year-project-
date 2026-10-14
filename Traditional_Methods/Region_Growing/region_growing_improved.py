@@ -1,33 +1,3 @@
-"""
-Improved seeded region growing -- the textbook method in
-region_growing_segmentation.py plus fixes for its two failure modes on
-Chest_CT: missed lungs (bad seeds) and leakage. Results go to
-Results_Improved/ so both versions can be compared.
-
-Fix 1, seeds from dark blobs, placed iteratively. The textbook version takes
-  the darkest point in each half of the body, so a seed can land in the
-  trachea or a small lung fragment and a lung is missed. Here the heavily
-  blurred body is split into dark blobs (below the midpoint between its
-  darkest value and the body median). A seed goes at the darkest point of the
-  largest blob, that seed is grown, the grown region is removed from the blob
-  map, and the next seed comes from the largest dark area left. This repeats
-  until no blob of lung size remains (at most MAX_SEEDS), so two lungs that
-  blur into one blob with the trachea still each get a seed.
-
-Fix 2, leak guard. A region has leaked if it covers more than
-  MAX_REGION_FRACTION of the body, or if its mean brightness has drifted from
-  the seed's starting level by more than MAX_DRIFT_FRACTION of the gap
-  between that level and the body median (adaptive growing creeping into
-  brighter tissue such as liver). A leaked region is regrown with the
-  tolerance halved, up to MAX_RETRIES times, and dropped if it still leaks.
-
-Everything else -- body mask, adaptive growing, clean-up -- is unchanged.
-
-Usage:
-    python region_growing_improved.py                 # both CT datasets
-    python region_growing_improved.py IQ-OTH_NCCD     # one dataset
-"""
-
 import sys
 from pathlib import Path
 
@@ -35,14 +5,14 @@ import numpy as np
 from skimage import filters, measure
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from common import MIN_LUNG_FRACTION, body_mask, clean_lungs, main
+from common import MIN_LUNG_FRACTION, body_mask, clean_lungs, run
 from region_growing_segmentation import (GROW_SIGMA, SEED_SIGMA_FRACTION, TOLERANCE_FRACTION, body_blur, grow,
                                          seed_level)
 
 RESULTS_DIR = Path(__file__).resolve().parent / "Results_Improved"
-MAX_SEEDS = 4  # seeding stops earlier once no lung-sized dark blob is left
-MAX_REGION_FRACTION = 0.6  # a lung region covering more of the body than this has leaked
-MAX_DRIFT_FRACTION = 0.3  # ...as has one whose mean drifted this far towards the body median
+MAX_SEEDS = 4
+MAX_REGION_FRACTION = 0.6
+MAX_DRIFT_FRACTION = 0.3
 MAX_RETRIES = 3
 
 
@@ -53,7 +23,6 @@ def dark_blobs(img, body):
 
 
 def next_seed(blobs, blurred, min_area):
-    """Darkest point of the largest remaining dark blob, or None."""
     regions = measure.regionprops(measure.label(blobs))
     if not regions:
         return None
@@ -66,8 +35,6 @@ def next_seed(blobs, blurred, min_area):
 
 
 def grow_with_leak_guard(smooth, body, seed, body_median):
-    """Grow; if the region leaks (too big, or its mean drifted too far), halve
-    the tolerance and regrow. Returns (region or None, retries used)."""
     start, _ = seed_level(smooth, seed)
     size_limit = MAX_REGION_FRACTION * body.sum()
     drift_limit = MAX_DRIFT_FRACTION * (body_median - start)
@@ -81,7 +48,6 @@ def grow_with_leak_guard(smooth, body, seed, body_median):
 
 
 def segment(img):
-    # Body, shared with thresholding.
     body, _, _ = body_mask(img)
     if not body.any():
         empty = np.zeros_like(body)
@@ -90,8 +56,6 @@ def segment(img):
     min_area = MIN_LUNG_FRACTION * body.sum()
     smooth = filters.gaussian(img, sigma=GROW_SIGMA)
 
-    # Fix 1 + 2: seed the largest dark blob, grow it with the leak guard,
-    # remove what was grown (or the blob, if growing failed), repeat.
     blobs, blurred = dark_blobs(img, body)
     remaining = blobs.copy()
     seeds, regions, retries, dropped = [], [], 0, 0
@@ -110,7 +74,6 @@ def segment(img):
         remaining &= ~region
         remaining[seed] = False
 
-    # Like the other methods, keep the two largest regions as the lungs.
     regions = sorted(regions, key=lambda region: region.sum(), reverse=True)[:2]
     lungs = clean_lungs(regions, body, img)
 
@@ -130,4 +93,4 @@ def segment(img):
 
 
 if __name__ == "__main__":
-    main(segment, RESULTS_DIR, "improved seeded region growing")
+    run(segment, RESULTS_DIR, "improved seeded region growing", "Region growing (improved)")

@@ -1,32 +1,7 @@
-"""
-Shared plumbing for the traditional lung-segmentation methods: image loading,
-mask clean-up helpers, the per-dataset run loop, and the summary / figures
-every method writes.
-
-Each method script defines segment(img) -> (lungs, body, panels, info):
-  lungs   bool mask of the segmented lungs
-  body    bool mask of the patient's body (for the lung-fraction statistic)
-  panels  [(title, array), ...] intermediate steps, drawn into steps.png
-  info    dict of extra per-image values written to summary.csv
-and calls main(segment, results_dir, title) from its __main__ block.
-
-Every mask is scored against the same reference: the lungmask U-Net masks in
-Datasets/<dataset>/ReferenceMasks (see Datasets/create_reference_masks.py).
-score() is shared with the ML methods, so all methods are measured alike.
-
-Outputs, under <method>/Results/<dataset>/:
-  masks/<split>/<class>/<name>.png   binary lung mask (0/255) per image
-  summary.csv                        per image: method values, lung regions,
-                                     area, seconds, and the scores against the
-                                     reference (plus raw tp/fp/fn/tn counts,
-                                     so pooled scores can be recomputed)
-  overlays.png                       random sample: mask (red), reference (green)
-  steps.png                          every pipeline step on one image
-"""
-
 import argparse
 import csv
 import random
+import sys
 import time
 from pathlib import Path
 
@@ -42,12 +17,13 @@ from skimage.filters import threshold_isodata
 TRADITIONAL_DIR = Path(__file__).resolve().parent
 DATASETS_DIR = TRADITIONAL_DIR.parent / "Datasets"
 REFERENCE_DIRNAME = "ReferenceMasks"
-CT_DATASETS = ["Chest_CT", "IQ-OTH_NCCD"]  # LC25000_Lung is histopathology, not CT
+MANUAL_REFERENCE_DATASETS = ["COVID19_CT_Seg"]
+CT_DATASETS = MANUAL_REFERENCE_DATASETS + ["Chest_CT", "IQ-OTH_NCCD"]
 IMAGE_EXTS = {".png", ".jpg", ".jpeg"}
 
-MIN_LUNG_FRACTION = 0.01  # a region must be >= 1% of the body to count as lung
-CLOSING_RADIUS_FRACTION = 0.02  # rolling-ball radius, as a fraction of the shorter image side
-BODY_CLOSING_RADIUS_FRACTION = 0.01  # bridges annotation lines that cut the body wall
+MIN_LUNG_FRACTION = 0.01
+CLOSING_RADIUS_FRACTION = 0.02
+BODY_CLOSING_RADIUS_FRACTION = 0.01
 N_OVERLAYS = 16
 RANDOM_STATE = 42
 
@@ -73,8 +49,6 @@ def disk_radius(img, fraction):
 
 
 def body_mask(img):
-    """Isodata threshold, largest bright region, small closing (bridges
-    annotation lines drawn across the body wall), holes filled."""
     body_threshold = threshold_isodata(img)
     bright = img > body_threshold
     footprint = morphology.disk(disk_radius(img, BODY_CLOSING_RADIUS_FRACTION))
@@ -83,8 +57,6 @@ def body_mask(img):
 
 
 def close_and_fill(mask, radius):
-    """Disk closing (the "rolling ball") then hole filling, done on the mask's
-    bounding box only -- much faster than closing the whole image."""
     rows, cols = np.nonzero(mask)
     if rows.size == 0:
         return mask
@@ -100,7 +72,6 @@ def close_and_fill(mask, radius):
 
 
 def clean_lungs(lung_regions, body, img):
-    """Close + fill each lung on its own (so the two lungs are never bridged)."""
     radius = disk_radius(img, CLOSING_RADIUS_FRACTION)
     lungs = np.zeros(img.shape, dtype=bool)
     for region in lung_regions:
@@ -118,8 +89,6 @@ def reference_mask(dataset, rel):
 
 
 def score(mask, reference):
-    """Per-image scores of a mask against the reference, plus the raw counts.
-    When both masks are empty (e.g. an abdomen slice) every score is 1."""
     tp = int((mask & reference).sum())
     fp = int((mask & ~reference).sum())
     fn = int((~mask & reference).sum())
@@ -130,18 +99,24 @@ def score(mask, reference):
                 pixel_accuracy=ratio(tp + tn, mask.size), tp=tp, fp=fp, fn=fn, tn=tn)
 
 
-def print_scores(rows):
-    """Per split: mean / median Dice, failures, pooled pixel scores, time."""
-    for split in ("train", "test"):
+def print_summary(rows, title, dataset):
+    print()
+    print("=" * 104)
+    print(f"SUMMARY: {title} on {dataset} (vs. reference masks)")
+    print("=" * 104)
+    print(f"{'Split':<7}{'Images':>7}{'Dice mean':>11}{'median':>9}{'std':>8}{'<0.8':>6}{'IoU':>9}"
+          f"{'PixAcc':>9}{'Precision':>11}{'Recall':>9}{'s/img':>8}")
+    for split in ("train", "val", "test"):
         part = [r for r in rows if r["split"] == split]
         if not part:
             continue
         d = np.array([r["dice"] for r in part])
         tp, fp, fn, tn = (sum(r[k] for r in part) for k in ("tp", "fp", "fn", "tn"))
-        print(f"{split:>5} ({len(part)} images): Dice mean {d.mean():.4f} / median {np.median(d):.4f}, "
-              f"< 0.8 on {(d < 0.8).sum()} | pooled IoU {tp / (tp + fp + fn):.4f}, "
-              f"pixel accuracy {(tp + tn) / (tp + fp + fn + tn):.4f}, precision {tp / max(tp + fp, 1):.4f}, "
-              f"recall {tp / max(tp + fn, 1):.4f} | {np.mean([r['seconds'] for r in part]):.2f}s per image")
+        print(f"{split:<7}{len(part):>7}{d.mean():>11.4f}{np.median(d):>9.4f}{d.std():>8.3f}{(d < 0.8).sum():>6}"
+              f"{tp / max(tp + fp + fn, 1):>9.4f}{(tp + tn) / max(tp + fp + fn + tn, 1):>9.4f}"
+              f"{tp / max(tp + fp, 1):>11.4f}{tp / max(tp + fn, 1):>9.4f}"
+              f"{np.mean([r['seconds'] for r in part]):>8.2f}")
+    print("=" * 104)
 
 
 def list_images(dataset):
@@ -181,6 +156,63 @@ def save_steps(panels, out_path, title):
     fig.tight_layout()
     fig.savefig(out_path, dpi=90)
     plt.close(fig)
+
+
+def find_reference(path):
+    parts = path.resolve().parts
+    if "DataSplit" not in parts:
+        return None
+    i = parts.index("DataSplit")
+    dataset, rel = parts[i - 1], Path(*parts[i + 1:])
+    if not (DATASETS_DIR / dataset / REFERENCE_DIRNAME / rel).with_suffix(".png").exists():
+        return None
+    return reference_mask(dataset, rel)
+
+
+def collect_images(targets):
+    paths = []
+    for target in targets:
+        if target.is_dir():
+            paths += sorted(p for p in target.rglob("*") if p.suffix.lower() in IMAGE_EXTS)
+        else:
+            paths.append(target)
+    return paths
+
+
+def open_windows():
+    plt.switch_backend("TkAgg")
+
+
+def save_side_by_side(path, img, lungs, method, out_dir, show):
+    reference = find_reference(path)
+    fig, (left, right) = plt.subplots(1, 2, figsize=(12, 6.4), layout="constrained")
+    left.imshow(img, cmap="gray", vmin=0, vmax=1)
+    left.set_title("Input image")
+    right.imshow(np.where(lungs, img, 0), cmap="gray", vmin=0, vmax=1)
+    right_title = f"Segmented lungs ({lungs.mean():.1%} of image)"
+    if reference is not None:
+        right_title += f" - Dice {dice(lungs, reference):.4f}"
+    right.set_title(right_title)
+    for ax in (left, right):
+        ax.axis("off")
+    fig.suptitle(f"{method}: {path.name}")
+
+    out_path = out_dir / f"{path.stem}.png"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path, dpi=100)
+    print(f"{path.name}: {right_title} -> saved {out_path}")
+    if show:
+        plt.show()
+    plt.close(fig)
+
+
+def view_images(segment, targets, show, method, out_dir):
+    if show:
+        open_windows()
+    for path in collect_images(targets):
+        img = load_gray(path)
+        lungs = segment(img)[0]
+        save_side_by_side(path, img, lungs, method, out_dir, show)
 
 
 def run_dataset(name, segment, results_dir, title):
@@ -229,17 +261,30 @@ def run_dataset(name, segment, results_dir, title):
           f"3+ -> {counts[3]}, 2 -> {counts[2]}, 1 -> {counts[1]}, 0 -> {counts[0]}")
     print(f"Lung area as fraction of body: median {np.median(fractions):.3f}, "
           f"min {fractions.min():.3f}, max {fractions.max():.3f}")
-    print_scores(rows)
+    print_summary(rows, title, name)
     print(f"Saved masks, summary.csv, overlays.png and steps.png to {out_dir}")
 
 
 def main(segment, results_dir, title):
     parser = argparse.ArgumentParser()
-    parser.add_argument("datasets", nargs="*", help=f"subset of {', '.join(CT_DATASETS)} (default: all)")
+    parser.add_argument("datasets", nargs="*",
+                        help=f"subset of {', '.join(CT_DATASETS)} (default: {', '.join(MANUAL_REFERENCE_DATASETS)})")
     args = parser.parse_args()
-    names = args.datasets or CT_DATASETS
+    names = args.datasets or MANUAL_REFERENCE_DATASETS
     unknown = set(names) - set(CT_DATASETS)
     if unknown:
         parser.error(f"unknown or non-CT dataset: {', '.join(sorted(unknown))}")
     for name in names:
         run_dataset(name, segment, results_dir, title)
+
+
+def run(segment, results_dir, title, method):
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--view", nargs="+", type=Path)
+    parser.add_argument("--no-show", action="store_true")
+    args, rest = parser.parse_known_args()
+    if args.view:
+        view_images(segment, args.view, not args.no_show, method, results_dir / "side_by_side")
+    else:
+        sys.argv = [sys.argv[0]] + rest
+        main(segment, results_dir, title)
