@@ -27,14 +27,25 @@ The last line must print `True`. If it prints `False`, update the NVIDIA driver,
 
 Dataset: https://www.kaggle.com/datasets/hamdallak/the-iqothnccd-lung-cancer-dataset
 
-Create a Kaggle API token (Kaggle > Settings > API > Create New Token). Either save the downloaded `kaggle.json` in `%USERPROFILE%\.kaggle\` or set the token as below:
+Credentials: nothing is stored in the repo. Each user signs in with their own Kaggle account.
+
+1. Sign in at kaggle.com, open Settings > API and create a token (a new account may need phone verification first).
+2. Give the token to the Kaggle package in ONE of these ways:
+   - Environment variable, for the current PowerShell window only:
+     `$env:KAGGLE_API_TOKEN = "<your token>"`
+   - Token file: save the token as `%USERPROFILE%\.kaggleccess_token`.
+   - Older style: save the downloaded `kaggle.json` as `%USERPROFILE%\.kaggle\kaggle.json`.
+3. Open the dataset page above once in the browser and accept its terms if Kaggle asks.
+4. Download and split:
 
 ```powershell
-$env:KAGGLE_API_TOKEN = "<your token>"
 python Datasets\download_iqothnccd.py
 ```
 
-If you prefer to download the zip in the browser: `python Datasets\download_iqothnccd.py --zip path\to\archive.zip`.
+No Kaggle account? Download the zip in the browser and run
+`python Datasets\download_iqothnccd.py --zip path	orchive.zip` (no credentials needed).
+
+Never commit the token or `kaggle.json`.
 
 The script puts the three class folders in `Datasets\IQ-OTH_NCCD\Data\` and runs `create_splits.py`, which removes
 byte-identical duplicates and rewrites `Datasets\IQ-OTH_NCCD\DataSplit\` (same split every time, seed 42).
