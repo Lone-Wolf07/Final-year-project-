@@ -1,0 +1,2 @@
+variant,linear_probe_mean,linear_probe_std,linear_benign_recall,quantum_seed0,quantum_benign_recall
+"ImageNet weights, no fine-tuning",95.35545,0.46436,70.0,94.3128,65.0

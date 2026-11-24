@@ -1,0 +1,34 @@
+{
+  "purpose": "To check whether the quantum fidelity classifier is better than the strongest classical competitor in the paper (ResNet50), and whether any gain comes from the feature extractor or from the classifier. Two feature extractors are crossed with two classifiers, giving four models that are trained and tested on exactly the same data.",
+  "setup": [
+    "Data: IQ-OTH/NCCD after de-duplication, 80:20 split. 1,089 training images (benign augmented ×4 after the split) and 211 original test images (20 benign, 110 malignant, 81 normal). The test images are run from the raw files through preprocessing (NLM, ACLAHE, resize to 224, z-score).",
+    "Feature extractor 1: ConvNeXt-Tiny + ECA (768 features per image), fine-tuned for 50 epochs.",
+    "Feature extractor 2: ResNet50, ImageNet-pretrained (2048 features per image), fine-tuned for 50 epochs with the same optimiser (AdaBelief, lr 1e-4), batch size 32, augmentation and mixed precision.",
+    "Classical classifier: each network's own fully connected softmax layer, trained end to end with the network. This is how ResNet50 is normally used.",
+    "Quantum classifier: features → Linear(n, 8) → π·tanh → 8-qubit, 2-layer parameterised circuit (statevector simulation) → average fidelity to each class's training images → softmax with learned temperature. 50 epochs, AdaBelief lr 1e-4, batch 32, trained on the frozen features of each network. Seed 0 is reported in the 2 × 2 table; 5 seeds give the mean ± std.",
+    "Timing: NVIDIA RTX 3050 Laptop GPU for the networks and classifiers, AMD Ryzen 7 5800HS CPU for preprocessing, synchronised CUDA timers, with a warm-up before each measurement."
+  ],
+  "training_note": "The epoch benchmark trained both networks for 2 epochs back to back under the same conditions. ResNet50 took about 5× longer per epoch than ConvNeXt-ECA (79.5 s vs 15.4 s), so its slower training is real and not caused by other load on the machine. The quantum classifier adds about 5–6 minutes of training on top of either extractor; the classical head adds nothing because it is trained together with the network.",
+  "linear_intro": "A fair question is whether the quantum layer helps, or whether any classifier trained on the frozen features would do just as well. To check, a single linear softmax layer (features → 3 classes, AdaBelief lr 1e-3, 100 epochs, 5 seeds) was trained on the same frozen features used by the quantum classifier.",
+  "findings": [
+    "Best single model in the 2 × 2: ConvNeXt-ECA + quantum, 98.10% accuracy, F1 96.47, MCC 96.69, benign recall 90%. ResNet50 with its own classical head (the paper's competitor) reached 96.21%, F1 90.10, benign recall 60%.",
+    "With either feature extractor, the quantum classifier beats that network's own classical head: +4.26 points for ConvNeXt-ECA (93.84 → 98.10) and +1.42 for ResNet50 (96.21 → 97.63). The gain comes almost entirely from benign scans, where the classical heads confuse benign with normal (benign recall 45% and 60%, against 90% and 80% for quantum).",
+    "Across 5 seeds the two quantum models are statistically tied: ConvNeXt-ECA + quantum 98.01 ± 0.19, ResNet50 + quantum 98.20 ± 0.55. On this dataset the choice of classifier matters more than the choice of feature extractor.",
+    "The quantum step is cheap when images are classified in batches: 0.13–0.17 ms per image, against 2.0 ms (ResNet50) or 5.5 ms (ConvNeXt-ECA) for feature extraction. Per image, ResNet50 is the faster extractor (2.0 vs 5.5 ms), even though it is about 5× slower to train.",
+    "For a single new image the quantum step costs about 30 ms, because the simulated circuit has a fixed launch overhead. Preprocessing (about 275 ms on the CPU) dominates the end-to-end time for every model (304–340 ms), so the choice of model hardly changes how long a user waits.",
+    "Important caveat: a plain linear layer on the same frozen features matches the quantum classifier (ConvNeXt-ECA 98.58 ± 0.00 vs 98.01 ± 0.19; ResNet50 98.20 ± 0.19 vs 98.20 ± 0.55) and trains about 50× faster (about 6 s vs about 5.5 min). The advantage over ResNet50 therefore comes from training a separate classifier on frozen features, not from the quantum circuit itself. The quantum classifier is competitive, not superior, to a classical classifier given the same features."
+  ],
+  "limitations": [
+    "One dataset, one 80:20 split, and only 20 benign test images: one benign image equals 5 points of benign recall, so differences in benign recall are noisy.",
+    "The classical heads are single trained networks (one seed). The quantum and linear classifiers were run with 5 seeds.",
+    "The quantum circuit is a noiseless simulation; real-hardware noise and shot sampling were not modelled.",
+    "There are no patient IDs in IQ-OTH/NCCD, so the split is image-level, not patient-level.",
+    "Absolute times depend on this laptop and on background load. The comparisons between models were measured in the same session."
+  ],
+  "files": [
+    "Script: CNN/Comparison/compare_2x2.py (re-runs everything); CNN/Comparison/make_report.py (rebuilds this report).",
+    "Results: CNN/Comparison/Results/ (cells.csv, per_seed.csv, epoch_benchmark.csv, confusion_matrices.png).",
+    "Stored features of both networks: CNN/Comparison/Features/ (convnext_eca_… and resnet50_features_split_80_20.npz).",
+    "Models: CNN/Archive_50_epochs/Feature_Extraction/Models/convnext_eca_split_80_20_tiny.pt and CNN/ResNet50/Models/resnet50_split_80_20_e50.pt."
+  ]
+}

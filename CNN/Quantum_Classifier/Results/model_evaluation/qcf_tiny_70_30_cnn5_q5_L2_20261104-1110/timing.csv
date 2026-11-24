@@ -1,0 +1,13 @@
+stage,step,seconds,per_image_ms
+Training,1. Preprocessing (all images),,
+Training,2. ConvNeXt-ECA training (epochs only),76.9,
+Training,2. ConvNeXt-ECA step (loading + training + extracting features),,
+Training,3. Quantum classifier training,30.0,
+Test set (317 images),1. Preprocessing,63.094,199.034
+Test set (317 images),2. ConvNeXt-ECA features,1.593,5.025
+Test set (317 images),3. Quantum classifier,0.029,0.092
+Test set (317 images),Total,64.716,204.151
+One new image (mean of 20),1. Preprocessing,,192.906
+One new image (mean of 20),2. ConvNeXt-ECA features,,22.782
+One new image (mean of 20),3. Quantum classifier,,30.711
+One new image (mean of 20),Total,,246.399

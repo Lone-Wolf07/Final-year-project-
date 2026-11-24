@@ -1,0 +1,78 @@
+﻿resnet50_split_80_20_e50 on cuda: 1089 train images, 50 epochs
+parameters: 23,514,179
+epoch   1/50  loss 0.9290  train acc 0.6198  (70.3s)
+epoch   2/50  loss 0.6066  train acc 0.8365  (87.8s)
+epoch   3/50  loss 0.4335  train acc 0.8659  (85.4s)
+epoch   4/50  loss 0.3393  train acc 0.8852  (88.9s)
+epoch   5/50  loss 0.2546  train acc 0.9183  (85.1s)
+epoch   6/50  loss 0.2048  train acc 0.9320  (90.9s)
+epoch   7/50  loss 0.1746  train acc 0.9385  (88.8s)
+epoch   8/50  loss 0.1546  train acc 0.9532  (86.5s)
+epoch   9/50  loss 0.1299  train acc 0.9568  (89.7s)
+epoch  10/50  loss 0.1065  train acc 0.9725  (87.1s)
+epoch  11/50  loss 0.0913  train acc 0.9679  (88.4s)
+epoch  12/50  loss 0.0799  train acc 0.9725  (89.3s)
+epoch  13/50  loss 0.0582  train acc 0.9835  (88.6s)
+epoch  14/50  loss 0.0597  train acc 0.9807  (88.1s)
+epoch  15/50  loss 0.0497  train acc 0.9853  (87.8s)
+epoch  16/50  loss 0.0502  train acc 0.9871  (90.1s)
+epoch  17/50  loss 0.0306  train acc 0.9936  (89.5s)
+epoch  18/50  loss 0.0337  train acc 0.9899  (93.6s)
+epoch  19/50  loss 0.0429  train acc 0.9890  (91.0s)
+epoch  20/50  loss 0.0463  train acc 0.9853  (84.7s)
+epoch  21/50  loss 0.0423  train acc 0.9844  (80.2s)
+epoch  22/50  loss 0.0374  train acc 0.9908  (79.4s)
+epoch  23/50  loss 0.0364  train acc 0.9871  (84.0s)
+epoch  24/50  loss 0.0286  train acc 0.9936  (78.3s)
+epoch  25/50  loss 0.0412  train acc 0.9862  (81.6s)
+epoch  26/50  loss 0.0208  train acc 0.9945  (83.3s)
+epoch  27/50  loss 0.0180  train acc 0.9954  (85.7s)
+epoch  28/50  loss 0.0152  train acc 0.9963  (83.1s)
+epoch  29/50  loss 0.0327  train acc 0.9899  (85.5s)
+epoch  30/50  loss 0.0285  train acc 0.9927  (82.5s)
+epoch  31/50  loss 0.0174  train acc 0.9963  (85.1s)
+epoch  32/50  loss 0.0262  train acc 0.9927  (86.2s)
+epoch  33/50  loss 0.0273  train acc 0.9945  (85.3s)
+epoch  34/50  loss 0.0308  train acc 0.9917  (84.0s)
+epoch  35/50  loss 0.0173  train acc 0.9963  (84.9s)
+epoch  36/50  loss 0.0132  train acc 0.9945  (87.4s)
+epoch  37/50  loss 0.0219  train acc 0.9927  (82.2s)
+epoch  38/50  loss 0.0269  train acc 0.9927  (84.8s)
+epoch  39/50  loss 0.0199  train acc 0.9945  (82.6s)
+epoch  40/50  loss 0.0253  train acc 0.9917  (84.1s)
+epoch  41/50  loss 0.0287  train acc 0.9908  (85.2s)
+epoch  42/50  loss 0.0174  train acc 0.9945  (82.5s)
+epoch  43/50  loss 0.0201  train acc 0.9917  (85.3s)
+epoch  44/50  loss 0.0183  train acc 0.9954  (88.2s)
+epoch  45/50  loss 0.0163  train acc 0.9936  (85.4s)
+epoch  46/50  loss 0.0153  train acc 0.9963  (85.7s)
+epoch  47/50  loss 0.0190  train acc 0.9927  (81.2s)
+epoch  48/50  loss 0.0440  train acc 0.9826  (78.4s)
+epoch  49/50  loss 0.0150  train acc 0.9963  (78.1s)
+epoch  50/50  loss 0.0110  train acc 0.9972  (84.5s)
+
+Test-set scores (%):
+  accuracy           96.21
+  precision          97.0
+  recall             86.67
+  f1                 90.1
+  mcc                93.5
+  auc                99.78
+  recall_benign      60.0
+  recall_malignant   100.0
+  recall_normal      100.0
+Confusion matrix (rows actual, columns predicted: benign, malignant, normal):
+[[ 12   0   8]
+ [  0 110   0]
+ [  0   0  81]]
+
+Times:
+  Training                    ResNet50 training (epochs only)       4256.300 s
+  Test set (211 images)       1. Preprocessing                        58.380 s    276.681 ms/image
+  Test set (211 images)       2. ResNet50                              0.622 s      2.950 ms/image
+  Test set (211 images)       Total                                   59.002 s    279.630 ms/image
+  One new image (mean of 20)  1. Preprocessing                                    277.036 ms/image
+  One new image (mean of 20)  2. ResNet50                                          32.881 ms/image
+  One new image (mean of 20)  Total                                               309.917 ms/image
+
+Saved C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\ResNet50\Models\resnet50_split_80_20_e50.pt and results to C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\ResNet50\Results\resnet50_split_80_20_e50

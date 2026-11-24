@@ -1,0 +1,13 @@
+network,batch,mixed_precision,peak_memory_gb,ms_per_image,status,parameters_m
+ConvNeXt-Tiny,32,False,3.63331,107.85973,ok,27.82244
+ConvNeXt-Tiny,32,True,2.24182,7.24479,ok,27.82244
+ConvNeXt-Tiny,16,False,1.98185,31.50723,ok,27.82244
+ConvNeXt-Tiny,16,True,1.32534,8.03271,ok,27.82244
+ConvNeXt-Base,32,False,8.04079,703.36346,ok,87.56954
+ConvNeXt-Base,32,True,5.04078,192.65315,ok,87.56954
+ConvNeXt-Base,16,False,4.49965,543.66483,ok,87.56954
+ConvNeXt-Base,16,True,3.13503,90.78819,ok,87.56954
+ResNet50,32,False,3.33795,213.16673,ok,23.51418
+ResNet50,32,True,1.67871,110.33399,ok,23.51418
+ResNet50,16,False,1.61592,132.25016,ok,23.51418
+ResNet50,16,True,1.01813,98.38565,ok,23.51418

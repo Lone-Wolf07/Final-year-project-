@@ -1,0 +1,10 @@
+stage,model,phase,images,total_s,per_image_ms
+1. Preprocessing,NLM + ACLAHE + resize,test,317,89.596,282.636
+2. Feature extraction,ConvNeXt-ECA,training,950,1811.6,1906.947
+2. Feature extraction,ConvNeXt-ECA,test,317,1.342,4.233
+3. Classifier,768 -> 3,training,950,5.377,5.66
+3. Classifier,768 -> 3,test,317,0.001,0.003
+3. Classifier,768 -> 8 -> 3,training,950,7.527,7.923
+3. Classifier,768 -> 8 -> 3,test,317,0.001,0.004
+3. Classifier,8-qubit fidelity,training,950,1819.512,1915.276
+3. Classifier,8-qubit fidelity,test,317,0.087,0.273

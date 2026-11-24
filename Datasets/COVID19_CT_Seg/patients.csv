@@ -1,0 +1,19 @@
+patient,split,scans,slices
+coronacases_001,test,coronacases_001,30
+coronacases_002,test,coronacases_002,30
+coronacases_003,train,coronacases_003,30
+coronacases_004,train,coronacases_004,30
+coronacases_005,test,coronacases_005,30
+coronacases_006,train,coronacases_006,30
+coronacases_007,val,coronacases_007,30
+coronacases_008,train,coronacases_008,30
+coronacases_009,train,coronacases_009,30
+coronacases_010,val,coronacases_010,30
+radiopaedia_10,test,radiopaedia_10_85902_1 radiopaedia_10_85902_3,30
+radiopaedia_14,train,radiopaedia_14_85914_0,30
+radiopaedia_27,train,radiopaedia_27_86410_0,30
+radiopaedia_29,train,radiopaedia_29_86490_1 radiopaedia_29_86491_1,30
+radiopaedia_36,train,radiopaedia_36_86526_0,30
+radiopaedia_4,val,radiopaedia_4_85506_1,30
+radiopaedia_40,test,radiopaedia_40_86625_0,30
+radiopaedia_7,test,radiopaedia_7_85703_0,30

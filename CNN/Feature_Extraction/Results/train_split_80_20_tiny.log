@@ -1,0 +1,10 @@
+﻿split_80_20_tiny on cuda (NVIDIA GeForce RTX 3050 Laptop GPU): 1089 train / 211 test images
+epoch   1/5  loss 0.5172  train acc 0.8081  (27.7s)
+epoch   2/5  loss 0.2510  train acc 0.9128  (14.9s)
+epoch   3/5  loss 0.1958  train acc 0.9293  (15.0s)
+epoch   4/5  loss 0.1760  train acc 0.9366  (14.9s)
+epoch   5/5  loss 0.1428  train acc 0.9495  (14.9s)
+
+Features: train (1089, 768), test (211, 768) -> Features/features_split_80_20_tiny.npz
+train acc 91.28  prec 92.41  rec 90.65  f1 90.46  mcc 87.67  (linear head)
+test  acc 89.57  prec 59.55  rec 66.06  f1 62.38  mcc 82.59  (linear head)

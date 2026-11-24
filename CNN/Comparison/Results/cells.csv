@@ -1,0 +1,7 @@
+extractor,classifier,features,accuracy,precision,recall,f1,mcc,auc,recall_benign,recall_malignant,recall_normal,extractor_train_s,classifier_train_s,batch_preprocess_ms,batch_extract_ms,batch_classify_ms,batch_total_ms,batch_model_ms,single_preprocess_ms,single_extract_ms,single_classify_ms,single_total_ms,accuracy_mean,accuracy_std,f1_mean,f1_std,mcc_mean,mcc_std,recall_benign_mean,recall_benign_std
+ConvNeXt-ECA,Classical head (end-to-end),768,93.84,92.32,80.95,84.01,89.41,99.52,45.0,99.09,98.77,959.8,0.0,275.56,5.521,0.0012,281.082,5.523,282.77,27.45,0.179,310.39,,,,,,,,
+ConvNeXt-ECA,Quantum fidelity,768,98.1,97.04,95.95,96.47,96.69,99.32,90.0,99.09,98.77,959.8,309.8,275.56,5.521,0.1291,281.21,5.65,282.77,27.45,29.938,340.15,98.01,0.19,95.71,0.57,96.52,0.33,88.0,2.45
+ConvNeXt-ECA,Linear probe,768,98.58,97.43,96.26,96.82,97.51,99.85,90.0,100.0,98.77,959.8,6.3,275.56,5.521,0.0006,281.082,5.522,282.77,27.45,0.126,310.34,98.58,0.0,96.82,0.0,97.51,0.0,90.0,0.0
+ResNet50,Classical head (end-to-end),2048,96.21,97.0,86.67,90.1,93.5,99.78,60.0,100.0,100.0,4256.3,0.0,275.56,2.007,0.0009,277.568,2.008,282.77,20.97,0.189,303.92,,,,,,,,
+ResNet50,Quantum fidelity,2048,97.63,96.45,92.92,94.49,95.86,99.82,80.0,100.0,98.77,4256.3,346.6,275.56,2.007,0.1705,277.737,2.178,282.77,20.97,31.258,334.99,98.2,0.55,95.88,1.34,96.85,0.96,86.0,5.83
+ResNet50,Linear probe,2048,98.1,96.94,94.59,95.68,96.69,99.95,85.0,100.0,98.77,4256.3,6.4,275.56,2.007,0.001,277.568,2.008,282.77,20.97,0.149,303.88,98.2,0.19,95.91,0.46,96.85,0.33,86.0,2.0

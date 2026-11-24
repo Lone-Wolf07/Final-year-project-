@@ -1,0 +1,10 @@
+﻿1. Preprocessing           NLM + ACLAHE + resize    test        317 images     89.596 s    282.636 ms/image
+2. Feature extraction      ConvNeXt-ECA             training    950 images   1811.600 s   1906.947 ms/image
+2. Feature extraction      ConvNeXt-ECA             test        317 images      1.342 s      4.233 ms/image
+3. Classifier              768 -> 3                 training    950 images      5.377 s      5.660 ms/image
+3. Classifier              768 -> 3                 test        317 images      0.001 s      0.003 ms/image
+3. Classifier              768 -> 8 -> 3            training    950 images      7.527 s      7.923 ms/image
+3. Classifier              768 -> 8 -> 3            test        317 images      0.001 s      0.004 ms/image
+3. Classifier              8-qubit fidelity         training    950 images   1819.512 s   1915.276 ms/image
+3. Classifier              8-qubit fidelity         test        317 images      0.087 s      0.273 ms/image
+Saved C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\Quantum_Classifier\Results\evaluation_split_70_30_tiny\timing.csv

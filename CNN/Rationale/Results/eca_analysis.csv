@@ -1,0 +1,2 @@
+kernel,attention_min,attention_max,attention_mean,channel_spread,within_image_spread,share_below_0_5,share_above_0_9,max_class_difference
+"[-0.5419999957084656, 0.24709999561309814, 0.19779999554157257]",0.37270245,0.5906645,0.49991158,0.009713483,0.01849236,0.49609,0.0,0.088973254

@@ -1,0 +1,6 @@
+split,images,accuracy,precision,recall,f1,mcc,auc,recall_benign,recall_malignant,recall_normal
+train,1165,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0
+test,220,97.73,95.19,96.02,95.59,96.11,99.92,91.67,100.0,96.39
+test (original images only),220,97.73,95.19,96.02,95.59,96.11,99.92,91.67,100.0,96.39
+test benign copies whose source is in train,0,,,,,,,,,
+test: mean top probability,220,57.09,,,,,,,,

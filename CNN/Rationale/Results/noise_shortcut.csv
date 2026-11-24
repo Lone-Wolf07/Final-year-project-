@@ -1,0 +1,6 @@
+label,group,n,raw,after_nlm,after_aclahe
+benign,typical (random sample),8,1.5943,0.5899,1.2982
+benign,noisy (raw sigma>5),8,29.9722,2.2239,4.7116
+malignant,typical (random sample),39,0.8025,0.1605,0.4318
+normal,typical (random sample),20,1.6737,0.7165,1.4966
+normal,noisy (raw sigma>5),75,25.4764,1.8963,4.5108

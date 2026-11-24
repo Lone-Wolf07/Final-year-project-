@@ -1,0 +1,8 @@
+stage,step,seconds,per_image_ms
+Training,ResNet50 training (epochs only),4256.3,
+Test set (211 images),1. Preprocessing,58.38,276.681
+Test set (211 images),2. ResNet50,0.622,2.95
+Test set (211 images),Total,59.002,279.63
+One new image (mean of 20),1. Preprocessing,,277.036
+One new image (mean of 20),2. ResNet50,,32.881
+One new image (mean of 20),Total,,309.917

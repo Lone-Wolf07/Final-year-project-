@@ -1,0 +1,2 @@
+accuracy,precision,recall,f1,mcc,auc,recall_benign,recall_malignant,recall_normal
+93.36,85.87,88.07,86.85,88.52,97.88,75.0,99.09,90.12

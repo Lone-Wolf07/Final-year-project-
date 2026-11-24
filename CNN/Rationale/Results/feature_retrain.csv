@@ -1,0 +1,4 @@
+variant,linear_probe_mean,linear_probe_std,linear_benign_recall,head_accuracy,head_benign_recall,train_minutes,quantum_seed0,quantum_benign_recall
+no_eca,99.05213,0.0,90.0,99.05213,90.0,19.1833,99.52607,95.0
+adamw,96.58768,0.18957,75.0,96.68246,75.0,13.97247,97.1564,80.0
+from_scratch,48.72038,4.48011,25.0,47.8673,0.0,17.73199,57.34597,60.0

@@ -1,0 +1,16 @@
+﻿950 train / 317 test, 5 seeds on cuda
+768 -> 3: done
+768 -> 8 -> 3: done
+8-qubit fidelity seed 0: test acc 95.90  auc 99.72  (267 s)
+8-qubit fidelity seed 1: test acc 97.48  auc 99.68  (271 s)
+8-qubit fidelity seed 2: test acc 97.16  auc 99.18  (288 s)
+8-qubit fidelity seed 3: test acc 96.53  auc 99.66  (279 s)
+8-qubit fidelity seed 4: test acc 97.48  auc 99.51  (306 s)
+
+Test set, mean ± std over 5 seeds
+ConvNeXt head (Stage 1)  accuracy 96.85 ± 0.00  precision 97.47 ± 0.00  recall 89.25 ± 0.00  f1 92.28 ± 0.00  mcc 94.60 ± 0.00  auc 99.77 ± 0.00  recall_benign 67.74 ± 0.00  recall_malignant 100.00 ± 0.00  recall_normal 100.00 ± 0.00
+768 -> 3                 accuracy 98.11 ± 0.00  precision 98.44 ± 0.00  recall 93.55 ± 0.00  f1 95.63 ± 0.00  mcc 96.74 ± 0.00  auc 99.85 ± 0.01  recall_benign 80.65 ± 0.00  recall_malignant 100.00 ± 0.00  recall_normal 100.00 ± 0.00
+768 -> 8 -> 3            accuracy 98.11 ± 0.00  precision 98.44 ± 0.00  recall 93.55 ± 0.00  f1 95.63 ± 0.00  mcc 96.74 ± 0.00  auc 99.83 ± 0.02  recall_benign 80.65 ± 0.00  recall_malignant 100.00 ± 0.00  recall_normal 100.00 ± 0.00
+8-qubit fidelity         accuracy 96.91 ± 0.61  precision 95.68 ± 0.88  recall 91.07 ± 1.98  f1 92.98 ± 1.42  mcc 94.62 ± 1.06  auc 99.55 ± 0.20  recall_benign 74.84 ± 5.91  recall_malignant 100.00 ± 0.00  recall_normal 98.36 ± 0.52
+
+Saved to C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\Quantum_Classifier\Results\evaluation_split_70_30_tiny

@@ -1,0 +1,11 @@
+﻿950 train / 317 test, 2 layers, lr 0.0001, batch 32, 5 epochs on cuda
+epoch   0  train loss 0.8905  test loss 0.8583  train acc  88.95  test acc  89.91  T 10.00
+epoch   1  train loss 0.6208  test loss 0.3242  train acc  92.32  test acc  89.59  T 10.05
+epoch   2  train loss 0.2845  test loss 0.2619  train acc  94.21  test acc  90.85  T 10.09
+epoch   3  train loss 0.1852  test loss 0.2242  train acc  95.58  test acc  91.48  T 10.11
+epoch   4  train loss 0.1436  test loss 0.1981  train acc  96.00  test acc  93.38  T 10.14
+epoch   5  train loss 0.1197  test loss 0.1889  train acc  96.74  test acc  93.06  T 10.17
+training took 30 s
+train accuracy 96.74  precision 96.57  recall 96.48  f1 96.46  mcc 95.11
+test  accuracy 93.06  precision 88.6  recall 81.37  f1 83.66  mcc 88.03
+Saved C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\Quantum_Classifier\Models\fidelity_split_70_30_tiny.pt and results to C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\Quantum_Classifier\Results\fidelity_split_70_30_tiny

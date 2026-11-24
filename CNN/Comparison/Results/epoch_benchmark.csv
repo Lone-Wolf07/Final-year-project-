@@ -1,0 +1,3 @@
+extractor,seconds_per_epoch,estimate_50_epochs_s,measured_50_epochs_s
+ConvNeXt-ECA,15.4,770.0,959.8
+ResNet50,79.5,3975.0,4256.3

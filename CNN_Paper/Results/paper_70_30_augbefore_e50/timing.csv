@@ -1,0 +1,6 @@
+step,seconds,ms
+"Training (all epochs, ConvNeXt-Base + ECA + quantum end to end)",2477.2,
+"Batched inference, train refs + 438 test images",11.28,
+One new image: preprocessing,,203.7
+One new image: ConvNeXt-Base + quantum,,80.1
+One new image: total,,283.7

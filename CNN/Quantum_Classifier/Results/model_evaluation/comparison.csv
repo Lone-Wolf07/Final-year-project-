@@ -1,0 +1,4 @@
+model,split,cnn_epochs,quantum_epochs,layers,accuracy,precision,recall,f1,mcc,auc,recall_benign,recall_malignant,recall_normal,preprocessing_s,cnn_training_s,cnn_step_s,quantum_step_s,test_set_s,one_image_ms
+qcf_tiny_80_20_cnn50_q50_L2_20261103-1409,split_80_20,50,50,2,98.1,97.04,95.95,96.47,96.69,99.32,90.0,99.09,98.77,,959.8,,396.0,44.258,291.131
+qcf_tiny_70_30_cnn5_q5_L2_20261104-1110,split_70_30,5,5,2,93.06,88.6,81.37,83.66,88.03,97.48,48.39,98.17,97.54,,76.9,,30.0,64.716,246.399
+qcf_tiny_80_20_cnn5_q5_L2_20261104-1120,split_80_20,5,5,2,93.36,85.87,88.07,86.85,88.52,97.88,75.0,99.09,90.12,,86.0,112.0,58.0,41.895,237.085

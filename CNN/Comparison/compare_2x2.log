@@ -1,0 +1,42 @@
+﻿
+Timing 2 training epochs of ConvNeXt-ECA
+epoch   1/2  loss 0.5867  train acc 0.7704  (17.0s)
+epoch   2/2  loss 0.2575  train acc 0.9073  (13.8s)
+
+Timing 2 training epochs of ResNet50
+epoch   1/2  loss 0.9746  train acc 0.5785  (79.0s)
+epoch   2/2  loss 0.5972  train acc 0.8264  (80.0s)
+
+Preprocessing: 275.6 ms per image over 211 test images
+
+ConvNeXt-ECA: 768 features per image
+  quantum seed 0: accuracy 98.1  (310 s)
+  linear  seed 0: accuracy 98.58  (6.3 s)
+  quantum seed 1: accuracy 98.1  (393 s)
+  linear  seed 1: accuracy 98.58  (6.4 s)
+  quantum seed 2: accuracy 97.63  (377 s)
+  linear  seed 2: accuracy 98.58  (8.3 s)
+  quantum seed 3: accuracy 98.1  (559 s)
+  linear  seed 3: accuracy 98.58  (6.0 s)
+  quantum seed 4: accuracy 98.1  (327 s)
+  linear  seed 4: accuracy 98.58  (5.9 s)
+  Classical head (end-to-end)  accuracy  93.84  benign recall   45.0  model 5.52 ms/image  one image 310.4 ms
+  Quantum fidelity             accuracy   98.1  benign recall   90.0  model 5.65 ms/image  one image 340.1 ms
+  Linear probe                 accuracy  98.58  benign recall   90.0  model 5.52 ms/image  one image 310.3 ms
+
+ResNet50: 2048 features per image
+  quantum seed 0: accuracy 97.63  (347 s)
+  linear  seed 0: accuracy 98.1  (6.4 s)
+  quantum seed 1: accuracy 97.63  (302 s)
+  linear  seed 1: accuracy 98.58  (6.3 s)
+  quantum seed 2: accuracy 98.1  (314 s)
+  linear  seed 2: accuracy 98.1  (6.2 s)
+  quantum seed 3: accuracy 99.05  (344 s)
+  linear  seed 3: accuracy 98.1  (6.3 s)
+  quantum seed 4: accuracy 98.58  (350 s)
+  linear  seed 4: accuracy 98.1  (9.4 s)
+  Classical head (end-to-end)  accuracy  96.21  benign recall   60.0  model 2.01 ms/image  one image 303.9 ms
+  Quantum fidelity             accuracy  97.63  benign recall   80.0  model 2.18 ms/image  one image 335.0 ms
+  Linear probe                 accuracy   98.1  benign recall   85.0  model 2.01 ms/image  one image 303.9 ms
+
+Saved results to C:\Users\duggi\OneDrive\Documents\Coding_Files\.vscode\Final_Year_Project\CNN\Comparison\Results
