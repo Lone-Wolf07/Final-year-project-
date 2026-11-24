@@ -33,7 +33,7 @@ Credentials: nothing is stored in the repo. Each user signs in with their own Ka
 2. Give the token to the Kaggle package in ONE of these ways:
    - Environment variable, for the current PowerShell window only:
      `$env:KAGGLE_API_TOKEN = "<your token>"`
-   - Token file: save the token as `%USERPROFILE%\.kaggleccess_token`.
+   - Token file: save the token as `%USERPROFILE%\.kaggle\access_token`.
    - Older style: save the downloaded `kaggle.json` as `%USERPROFILE%\.kaggle\kaggle.json`.
 3. Open the dataset page above once in the browser and accept its terms if Kaggle asks.
 4. Download and split:
@@ -43,7 +43,7 @@ python Datasets\download_iqothnccd.py
 ```
 
 No Kaggle account? Download the zip in the browser and run
-`python Datasets\download_iqothnccd.py --zip path	orchive.zip` (no credentials needed).
+`python Datasets\download_iqothnccd.py --zip C:\path\to\archive.zip` (no credentials needed).
 
 Never commit the token or `kaggle.json`.
 
